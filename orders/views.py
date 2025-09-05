@@ -18,6 +18,9 @@ class CartAddView(APIView):
         product_id = request.data.get("product_id")
         quantity = int(request.data.get("quantity", 1))
 
+        if quantity < 1:
+            return Response({"detail": "Quantity must be at least 1"}, status=400)
+
         if not product_id:
             return Response({"detail": "Product ID is required"}, status=400)
 
@@ -49,6 +52,7 @@ class CartView(APIView):
 
     def get(self, request):
         cart, _ = Order.objects.get_or_create(user=request.user, status="pending")
+        cart.total_price = sum(item.price * item.quantity for item in cart.items.all())
         serializer = OrderSerializer(cart)
         return Response(serializer.data)
 
@@ -60,8 +64,9 @@ class CartUpdateView(APIView):
     def post(self, request):
         cart = get_object_or_404(Order, user=request.user, status="pending")
         item_id = request.data.get("item_id")
-        quantity = request.data.get("quantity")
-
+        quantity = int(request.data.get("quantity", 1))
+        if quantity < 1:
+            return Response({"message": "Quantity must be at least 1"}, status=400)
         item = get_object_or_404(cart.items, id=item_id)
         item.quantity = quantity
         item.save()
@@ -86,7 +91,8 @@ class CheckoutView(APIView):
 
     def post(self, request):
         cart = get_object_or_404(Order, user=request.user, status="pending")
-        cart.status = "paid"  # mark as placed/paid
+        cart.total_price = sum(item.price * item.quantity for item in cart.items.all())
+        cart.status = "placed"  # mark as placed/paid
         cart.save()
         return Response({"message": "Order placed successfully"})
 

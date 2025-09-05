@@ -1,0 +1,86 @@
+[Products] 
+   │
+   ▼
+[Add to Cart]  ── POST /orders/cart/add/ ──►  Creates/Updates pending OrderItem
+   │
+   ▼
+[View Cart]  ── GET /orders/cart/ ──►  Shows current pending order with items & total
+   │
+   ├─► [Update Quantity]  ── POST /orders/cart/update/ ──► Update quantity of a cart item
+   │
+   └─► [Remove Item]  ── POST /orders/cart/remove/ ──► Remove an item from the cart
+   │
+   ▼
+[Checkout / Place Order]  ── POST /orders/checkout/ ──►  Pending Order becomes Paid
+   │
+   ▼
+[Orders List]  ── GET /orders/ ──►  View all completed orders (paid/shipped/delivered)
+
+
+--------------------------------------------------------------------------------------
+
+✨ Notes
+
+Cart = Pending Order
+
+All cart actions manipulate an Order with status="pending".
+
+Checkout
+
+Updates order status to "paid".
+
+Can optionally recalculate total_price here.
+
+Orders List
+
+Only shows orders that are not pending.
+
+Each order contains nested OrderItems with product details.
+
+Frontend Use Case
+
+Add to Cart → Update cart badge count.
+
+View Cart → Display items, subtotal, total.
+
+Checkout → Call payment API (if integrated), then mark order as paid.
+
+Orders List → User order history page.
+
+----------------------------------------------------------------------------------
++-----------------+
+|     Products    |
++-----------------+
+         │
+         ▼
++-------------------------------+
+| Add to Cart                   |
+| POST /orders/cart/add/        |
++-------------------------------+
+         │
+         ▼
++-------------------------------+
+| View Cart                     |
+| GET /orders/cart/             |
++-------------------------------+
+    ┌──────────────┐
+    ▼              ▼
++----------------+ +----------------+
+| Update Quantity| | Remove Item    |
+| POST /orders/  | | POST /orders/  |
+| cart/update/   | | cart/remove/   |
++----------------+ +----------------+
+         │
+         ▼
++-------------------------------+
+| Checkout / Place Order        |
+| POST /orders/checkout/        |
++-------------------------------+
+         │
+         ▼
++-------------------------------+
+| Orders List                   |
+| GET /orders/                  |
++-------------------------------+
+
+      
