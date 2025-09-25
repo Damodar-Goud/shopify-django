@@ -6,7 +6,8 @@ from .models import Order, OrderItem, CartItem
 from products.models import Product
 from .serializers import (
     OrderSerializer,
-    OrderStatusUpdateSerializer,OrderItemStatusUpdateSerializer
+    OrderStatusUpdateSerializer,
+    OrderItemSerializer,
 )
 from rest_framework.permissions import IsAuthenticated
 
@@ -92,16 +93,9 @@ class CheckoutView(APIView):
 
     def post(self, request):
         cart = get_object_or_404(Order, user=request.user, status="pending")
-<<<<<<< HEAD
-        # ✅ Recalculate total
-        cart.total_price = sum(item.price * item.quantity for item in cart.items.all())
-
-        cart.status = "paid"  # mark as placed/paid
-=======
         cart.total_price = sum(item.price * item.quantity for item in cart.items.all())
         cart.status = "placed"  # mark as placed/paid
->>>>>>> 4a79d612d7d4dd1d87c45cb1bc0075b5995ea689
-        cart.save()
+        cart.save()  # type: ignore
 
         return Response({"message": "Order placed successfully", "order_id": cart.id})
 

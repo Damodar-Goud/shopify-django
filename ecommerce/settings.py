@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +30,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "products",
     "orders",
+    "payments",
     "corsheaders",
     "rest_framework_simplejwt",
     "rest_framework",
@@ -144,4 +147,9 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True  # for development
+CORS_ALLOW_ALL_ORIGINS = True  # for development
+
+
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "your_key_id")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "your_key_secret")
+    

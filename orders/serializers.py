@@ -28,22 +28,8 @@ class OrderSerializer(serializers.ModelSerializer):
         return sum(item.price * item.quantity for item in obj.items.all())
 
 
-<<<<<<< HEAD
-# orders/serializers.py
-=======
 # Optional: Serializer to update order status (admin or automated updates)
->>>>>>> 4a79d612d7d4dd1d87c45cb1bc0075b5995ea689
 class OrderStatusUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ["status"]
-<<<<<<< HEAD
-
-
-# orders/serializers.py
-class OrderItemStatusUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = ["status"]
-=======
->>>>>>> 4a79d612d7d4dd1d87c45cb1bc0075b5995ea689
